@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Movie;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Movie>
+ * @extends Factory<Movie>
  */
 class MovieFactory extends Factory
 {
@@ -16,8 +18,11 @@ class MovieFactory extends Factory
      */
     public function definition(): array
     {
+        $title = $this->faker->sentence;
+
         return [
-            'title' => $this->faker->sentence,
+            'title' => $title,
+            'slug' => Str::slug($title),
             'description' => $this->faker->sentences(4, true),
             'rating' => $this->faker->randomFloat(1, 1, 5)
         ];

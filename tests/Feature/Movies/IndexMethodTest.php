@@ -37,7 +37,6 @@ class IndexMethodTest extends TestCase
                         'label',
                         'active',
                     ],
-                    // ... additional link items
                 ],
                 'next_page_url',
                 'path',

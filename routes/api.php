@@ -23,8 +23,16 @@ Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
 Route::post('register', [AuthController::class, 'register'])->name('register');
 
-/**
- * ===== Movies routes =====
- */
-Route::get('movies/search/{string}', [MovieController::class, 'search'])->name('movies.search');
-Route::resource('movies', MovieController::class)->except(['edit', 'create']);
+
+Route::middleware('auth')->group(function () {
+    /**
+     * ===== Movies routes =====
+     */
+    Route::get('movies/search/{string}', [MovieController::class, 'search'])->name('movies.search');
+    Route::post('movies/favourite/{movie}', [MovieController::class, 'favourite'])->name('movies.favourite');
+    Route::get('movies/cache-favourite-list', [MovieController::class, 'cached'])->name('movies.cached');
+    Route::post('movies/cache-favourite-list/{timeInSeconds?}', [MovieController::class, 'cache'])->name('movies.cache');
+    Route::resource('movies', MovieController::class)->except(['edit', 'create']);
+
+    // Other routes ...
+});

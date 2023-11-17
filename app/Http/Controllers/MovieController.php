@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Movie\MovieRequest;
 use App\Models\Movie;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class MovieController extends Controller
@@ -119,5 +122,76 @@ class MovieController extends Controller
                 'message' => 'We don\'t have any results that match your search!'
             ]);
         }
+    }
+
+    /**
+     * @param Movie $movie
+     * @return JsonResponse
+     */
+    public function favourite(Movie $movie): JsonResponse
+    {
+        if (Auth::check()) {
+            $user = auth()->user();
+
+            // Check if the movie is already a favorite for the user
+            if (!$user->movies()->where('movie_slug', $movie->slug)->exists()) {
+                // Attach the movie to the user's favorites
+                $user->movies()->attach($movie->slug);
+
+                return response()->json(['message' => 'Movie has been added to favorites!']);
+            } else {
+                return response()->json(['message' => 'Movie is already in favorites.']);
+            }
+        } else {
+            return response()->json(['message' => 'You are not authenticated.']);
+        }
+    }
+
+    /**
+     * @param $timeInSeconds
+     * @return JsonResponse
+     */
+    public function cache($timeInSeconds = null): JsonResponse
+    {
+        $cacheKey = 'movie_user_data';
+
+        Cache::forget($cacheKey);
+
+        // If $timeInSeconds is null, cache indefinitely
+        if ($timeInSeconds === null) {
+            $data = Cache::rememberForever($cacheKey, function () {
+                return $this->getDataFromDatabase();
+            });
+
+            return response()->json([
+                'message' => 'Data cached indefinitely',
+                'data' => $data,
+            ]);
+        } else {
+            // Cache with the specified expiration time
+            $data = Cache::remember($cacheKey, $timeInSeconds, function () {
+                return $this->getDataFromDatabase();
+            });
+
+            return response()->json([
+                'message' => 'Data cached for ' . $timeInSeconds . ' seconds',
+                'data' => $data,
+            ]);
+        }
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function cached(): JsonResponse
+    {
+        $cachedData = Cache::get('movie_user_data');
+
+        return response()->json(['message' => 'Cached data', 'data' => $cachedData]);
+    }
+
+    private function getDataFromDatabase(): array
+    {
+        return DB::table('movie_user')->get()->toArray();
     }
 }

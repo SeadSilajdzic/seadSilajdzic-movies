@@ -14,14 +14,17 @@ class Movie extends Model
         return 'slug';
     }
 
+    protected $casts = ['slug' => 'string'];
+    protected $primaryKey = 'slug';
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = [
         'title',
         'description',
         'rating',
         'slug',
     ];
-
-    protected $casts = ['slug' => 'string'];
 
     const VALIDATION_RULES = [
         'post' => [

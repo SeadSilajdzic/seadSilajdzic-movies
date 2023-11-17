@@ -19,10 +19,11 @@ class MovieFactory extends Factory
     public function definition(): array
     {
         $title = $this->faker->sentence;
+        $slug = Str::slug($title);
 
         return [
             'title' => $title,
-            'slug' => Str::slug($title),
+            'slug' => $slug,
             'description' => $this->faker->sentences(4, true),
             'rating' => $this->faker->randomFloat(1, 1, 5)
         ];

@@ -3,8 +3,10 @@
 namespace Tests\Feature\Movies;
 
 use App\Models\Movie;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -12,9 +14,23 @@ class SearchMethodTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function createAuthenticatedUser()
+    {
+        $user = User::factory()->create([
+            'password' => Hash::make('password'),
+        ]);
+
+        // Authenticate the user
+        $this->actingAs($user);
+
+        return $user;
+    }
+
     /** @test */
     public function it_returns_movies_found()
     {
+        $user = $this->createAuthenticatedUser();
+
         // Create movies in the database
         $movie1 = Movie::create([
             'title' => 'Movie A',
@@ -81,6 +97,8 @@ class SearchMethodTest extends TestCase
     /** @test */
     public function it_returns_no_results_for_nonexistent_movie()
     {
+        $user = $this->createAuthenticatedUser();
+
         // Make a request to search for movies with a string that doesn't match any movies
         $response = $this->json('GET', 'http://127.0.0.1:8000/api/movies/search/Nonexistent');
 

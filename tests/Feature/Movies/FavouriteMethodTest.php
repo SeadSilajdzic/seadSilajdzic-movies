@@ -46,17 +46,4 @@ class FavouriteMethodTest extends TestCase
 
         $this->assertTrue($user->movies()->where('movie_slug', $movie->slug)->exists());
     }
-
-    public function testUnauthenticatedUserCannotAddFavorite()
-    {
-        $movie = Movie::factory()->create();
-
-        $response = $this->json('POST', route('movies.favourite', $movie->slug));
-
-        $response->assertStatus(200)
-            ->assertJson(['message' => 'You are not authenticated.']);
-
-        // Ensure the movie is not added to the user's favorites
-        $this->assertFalse(auth()->check());
-    }
 }

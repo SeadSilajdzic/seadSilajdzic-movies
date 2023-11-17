@@ -27,4 +27,5 @@ Route::post('register', [AuthController::class, 'register'])->name('register');
  * ===== Movies routes =====
  */
 Route::get('movies/search/{string}', [MovieController::class, 'search'])->name('movies.search');
+Route::post('movies/favourite/{movie}', [MovieController::class, 'favourite'])->name('movies.favourite');
 Route::resource('movies', MovieController::class)->except(['edit', 'create']);

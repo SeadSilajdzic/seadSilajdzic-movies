@@ -61,8 +61,8 @@ class SearchMethodTest extends TestCase
 
         // Assert the response structure
         $response->assertJsonStructure([
-            'movies_found',
-            'movies' => [
+            'message',
+            'data' => [
                 '*' => [
                     'id',
                     'title',
@@ -79,19 +79,19 @@ class SearchMethodTest extends TestCase
         $responseData = $response->json();
 
         // Assert the correct number of movies found
-        $this->assertEquals(3, $responseData['movies_found']);
+        $this->assertEquals(3, count($responseData['data']));
 
         // Assert the correct movies are present in the response
-        $this->assertCount(3, $responseData['movies']);
+        $this->assertCount(3, $responseData['data']);
 
         // Additional assertions based on your specific movie attributes
-        $this->assertArrayHasKey('id', $responseData['movies'][0]);
-        $this->assertArrayHasKey('title', $responseData['movies'][0]);
-        $this->assertArrayHasKey('slug', $responseData['movies'][0]);
-        $this->assertArrayHasKey('description', $responseData['movies'][0]);
-        $this->assertArrayHasKey('rating', $responseData['movies'][0]);
-        $this->assertArrayHasKey('created_at', $responseData['movies'][0]);
-        $this->assertArrayHasKey('updated_at', $responseData['movies'][0]);
+        $this->assertArrayHasKey('id', $responseData['data'][0]);
+        $this->assertArrayHasKey('title', $responseData['data'][0]);
+        $this->assertArrayHasKey('slug', $responseData['data'][0]);
+        $this->assertArrayHasKey('description', $responseData['data'][0]);
+        $this->assertArrayHasKey('rating', $responseData['data'][0]);
+        $this->assertArrayHasKey('created_at', $responseData['data'][0]);
+        $this->assertArrayHasKey('updated_at', $responseData['data'][0]);
     }
 
     /** @test */

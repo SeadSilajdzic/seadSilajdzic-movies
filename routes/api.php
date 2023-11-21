@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\MovieController;
+use App\Http\Controllers\Movies\MovieCacheController;
+use App\Http\Controllers\Movies\MovieController;
+use App\Http\Controllers\Movies\MovieFavouriteListController;
+use App\Http\Controllers\Movies\MovieSearchController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,11 +31,18 @@ Route::middleware('auth')->group(function () {
     /**
      * ===== Movies routes =====
      */
-    Route::get('movies/search/{string}', [MovieController::class, 'search'])->name('movies.search');
-    Route::post('movies/favourite/{movie}', [MovieController::class, 'favourite'])->name('movies.favourite');
-    Route::get('movies/cache-favourite-list', [MovieController::class, 'cached'])->name('movies.cached');
-    Route::post('movies/cache-favourite-list/{timeInSeconds?}', [MovieController::class, 'cache'])->name('movies.cache');
+    // Search routes
+    Route::get('movies/search/{string}', [MovieSearchController::class, 'search'])->name('movies.search');
+    // Favourite list routes
+    Route::post('movies/favourite/{movie}', [MovieFavouriteListController::class, 'favourite'])->name('movies.favourite');
+    // Cache routes
+    Route::get('movies/cache-favourite-list', [MovieCacheController::class, 'cached'])->name('movies.cached');
+    Route::post('movies/cache-favourite-list/{timeInSeconds?}', [MovieCacheController::class, 'cache'])->name('movies.cache');
+    // Movie resource routes
     Route::resource('movies', MovieController::class)->except(['edit', 'create']);
 
-    // Other routes ...
+
+    /**
+     * ===== Other models routes ... =====
+     */
 });

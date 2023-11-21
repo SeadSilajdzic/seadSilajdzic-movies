@@ -42,10 +42,13 @@ class ShowMethodTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                "title" => "My movie",
-                "slug" => "my-movie",
-                "description" => "My movie description",
-                "rating" => "5.0",
+                'message' => 'Movie loaded successfully',
+                'data' => [
+                    "title" => "My movie",
+                    "slug" => "my-movie",
+                    "description" => "My movie description",
+                    "rating" => "5.0",
+                ]
             ]);
     }
 

@@ -3,6 +3,7 @@
 namespace Tests\Feature\Movies;
 
 use App\Models\Movie;
+use App\Models\MovieUser;
 use App\Models\User;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -61,7 +62,6 @@ class UpdateMethodTest extends TestCase
 
         // Assert the response structure
         $response->assertJsonStructure([
-            'status',
             'message',
             'data' => [
                 'slug',

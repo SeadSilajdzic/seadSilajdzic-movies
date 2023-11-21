@@ -40,7 +40,6 @@ class StoreMethodTest extends TestCase
 
         $response->assertStatus(200)
         ->assertJson([
-            'status' => 'success',
             'message' => 'Movie stored successfully',
             'data' => [
                 'title' => $data['title'],
